@@ -61,26 +61,17 @@ if _has_cached_data(selected_product):
 elif api_key:
     use_cache = False
 else:
-    api_key = st.sidebar.text_input(
-        "EIA API Key",
-        type="password",
-        help="Get a free key at https://www.eia.gov/opendata/register.php",
+    st.title("U.S. Diesel Price Dashboard")
+    st.warning("No cached data found and no API key configured.")
+    st.markdown(
+        """
+        ### Setup
+        Either:
+        - Run `python scripts/refresh_data.py` locally to cache data, or
+        - Add your EIA API key to `.streamlit/secrets.toml`
+        """
     )
-    if api_key:
-        config.EIA_API_KEY = api_key
-        use_cache = False
-    else:
-        st.title("U.S. Diesel Price Dashboard")
-        st.warning("No cached data found and no API key provided.")
-        st.markdown(
-            """
-            ### Setup
-            Either:
-            - Run `python scripts/refresh_data.py` locally to cache data, or
-            - Enter an EIA API key in the sidebar
-            """
-        )
-        st.stop()
+    st.stop()
 
 # History length
 history_weeks = st.sidebar.slider("History (weeks)", 12, 104, 52)

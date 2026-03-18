@@ -3,7 +3,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-EIA_API_KEY = os.getenv("EIA_API_KEY", "")
+try:
+    import streamlit as st
+    EIA_API_KEY = st.secrets.get("EIA_API_KEY", "")
+except Exception:
+    EIA_API_KEY = os.getenv("EIA_API_KEY", "")
 EIA_BASE_URL = "https://api.eia.gov/v2"
 
 # EIA product codes for diesel
