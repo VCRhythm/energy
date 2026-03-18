@@ -28,64 +28,23 @@ PADD_REGIONS = {
     "R5XCA": "PADD 5 - West Coast (excl. CA)",
 }
 
-# State area codes used by EIA (duoarea format: S + two-letter state code)
-# Maps state abbreviation to EIA duoarea code and full name
-STATES = {
-    "AL": ("SAL", "Alabama"),
-    "AK": ("SAK", "Alaska"),
-    "AZ": ("SAZ", "Arizona"),
-    "AR": ("SAR", "Arkansas"),
-    "CA": ("SCA", "California"),
-    "CO": ("SCO", "Colorado"),
-    "CT": ("SCT", "Connecticut"),
-    "DE": ("SDE", "Delaware"),
-    "DC": ("SDC", "District of Columbia"),
-    "FL": ("SFL", "Florida"),
-    "GA": ("SGA", "Georgia"),
-    "HI": ("SHI", "Hawaii"),
-    "ID": ("SID", "Idaho"),
-    "IL": ("SIL", "Illinois"),
-    "IN": ("SIN", "Indiana"),
-    "IA": ("SIA", "Iowa"),
-    "KS": ("SKS", "Kansas"),
-    "KY": ("SKY", "Kentucky"),
-    "LA": ("SLA", "Louisiana"),
-    "ME": ("SME", "Maine"),
-    "MD": ("SMD", "Maryland"),
-    "MA": ("SMA", "Massachusetts"),
-    "MI": ("SMI", "Michigan"),
-    "MN": ("SMN", "Minnesota"),
-    "MS": ("SMS", "Mississippi"),
-    "MO": ("SMO", "Missouri"),
-    "MT": ("SMT", "Montana"),
-    "NE": ("SNE", "Nebraska"),
-    "NV": ("SNV", "Nevada"),
-    "NH": ("SNH", "New Hampshire"),
-    "NJ": ("SNJ", "New Jersey"),
-    "NM": ("SNM", "New Mexico"),
-    "NY": ("SNY", "New York"),
-    "NC": ("SNC", "North Carolina"),
-    "ND": ("SND", "North Dakota"),
-    "OH": ("SOH", "Ohio"),
-    "OK": ("SOK", "Oklahoma"),
-    "OR": ("SOR", "Oregon"),
-    "PA": ("SPA", "Pennsylvania"),
-    "RI": ("SRI", "Rhode Island"),
-    "SC": ("SSC", "South Carolina"),
-    "SD": ("SSD", "South Dakota"),
-    "TN": ("STN", "Tennessee"),
-    "TX": ("STX", "Texas"),
-    "UT": ("SUT", "Utah"),
-    "VT": ("SVT", "Vermont"),
-    "VA": ("SVA", "Virginia"),
-    "WA": ("SWA", "Washington"),
-    "WV": ("SWV", "West Virginia"),
-    "WI": ("SWI", "Wisconsin"),
-    "WY": ("SWY", "Wyoming"),
-}
-
-# Reverse lookup: EIA duoarea code -> state abbreviation
-DUOAREA_TO_STATE = {v[0]: k for k, v in STATES.items()}
-
 # National average area code
 NATIONAL_AREA = "NUS"
+
+# California (reported separately from PADD 5)
+CALIFORNIA_AREA = "SCA"
+
+# All areas available for comparison (national + PADD regions + California)
+ALL_SELECTABLE_AREAS = {
+    "U.S. National Average": "NUS",
+    "PADD 1 - East Coast": "R10",
+    "PADD 1A - New England": "R1X",
+    "PADD 1B - Central Atlantic": "R1Y",
+    "PADD 1C - Lower Atlantic": "R1Z",
+    "PADD 2 - Midwest": "R20",
+    "PADD 3 - Gulf Coast": "R30",
+    "PADD 4 - Rocky Mountain": "R40",
+    "PADD 5 - West Coast": "R50",
+    "PADD 5 - West Coast (excl. CA)": "R5XCA",
+    "California": "SCA",
+}

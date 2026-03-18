@@ -2,7 +2,7 @@
 
 import requests
 import pandas as pd
-from config import EIA_BASE_URL, EIA_API_KEY, PRODUCTS, DUOAREA_TO_STATE, NATIONAL_AREA
+from config import EIA_BASE_URL, EIA_API_KEY, NATIONAL_AREA, CALIFORNIA_AREA
 
 
 def _make_request(endpoint: str, params: dict) -> dict:
@@ -62,9 +62,6 @@ def fetch_current_prices(product: str = "EPD2DXL0") -> pd.DataFrame:
         df_latest["prev_price"] = None
         df_latest["change"] = None
 
-    # Add state abbreviation where applicable
-    df_latest["state"] = df_latest["duoarea"].map(DUOAREA_TO_STATE)
-
     return df_latest
 
 
@@ -120,45 +117,22 @@ def fetch_multi_area_history(
     return pd.concat(frames, ignore_index=True)
 
 
-def get_national_average(product: str = "EPD2DXL0") -> dict | None:
-    """Get the latest national average diesel price and change.
 
-    Returns dict with keys: price, change, period, or None if unavailable.
-    """
-    df = fetch_current_prices(product)
-    if df.empty:
-        return None
-    national = df[df["duoarea"] == NATIONAL_AREA]
-    if national.empty:
-        return None
-    row = national.iloc[0]
-    return {
-        "price": row["price"],
-        "change": row.get("change"),
-        "period": row["period"],
-    }
-
-
-def get_state_prices(product: str = "EPD2DXL0") -> pd.DataFrame:
-    """Get latest diesel prices filtered to states only (no regions/national).
+def get_regional_prices(product: str = "EPD2DXL0") -> pd.DataFrame:
+    """Get latest diesel prices for PADD regions and California.
 
     Returns DataFrame sorted by price ascending (cheapest first).
     """
-    df = fetch_current_prices(product)
-    if df.empty:
-        return df
-    # Filter to state-level entries only
-    states = df[df["state"].notna()].copy()
-    states = states.sort_values("price", ascending=True)
-    return states
-
-
-def get_regional_prices(product: str = "EPD2DXL0") -> pd.DataFrame:
-    """Get latest diesel prices filtered to PADD regions only."""
     from config import PADD_REGIONS
     df = fetch_current_prices(product)
     if df.empty:
         return df
+    # PADD regions
     regions = df[df["duoarea"].isin(PADD_REGIONS.keys())].copy()
     regions["region_name"] = regions["duoarea"].map(PADD_REGIONS)
+    # Include California (reported separately from PADD 5)
+    ca = df[df["duoarea"] == CALIFORNIA_AREA].copy()
+    if not ca.empty:
+        ca["region_name"] = "California"
+        regions = pd.concat([regions, ca], ignore_index=True)
     return regions.sort_values("price", ascending=True)
