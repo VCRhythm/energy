@@ -163,6 +163,43 @@ if not national.empty:
             col3.metric("Most Expensive Region", most_expensive["region_name"], f"${most_expensive['price']:.3f}/gal")
             col4.metric("Regional Spread", f"${most_expensive['price'] - cheapest['price']:.3f}/gal")
 
+# --- US Map ---
+st.subheader("Diesel Prices by Region (Map)")
+
+if not regional_prices.empty:
+    from config import STATE_TO_PADD
+
+    # Build a price lookup from duoarea code -> price
+    price_lookup = dict(zip(regional_prices["duoarea"], regional_prices["price"]))
+
+    # Create state-level dataframe by mapping each state to its PADD region price
+    map_rows = []
+    for state_abbr, area_code in STATE_TO_PADD.items():
+        price = price_lookup.get(area_code)
+        region_name = config.PADD_REGIONS.get(area_code, "California" if area_code == "SCA" else area_code)
+        if price is not None and pd.notna(price):
+            map_rows.append({"state": state_abbr, "price": price, "region": region_name})
+
+    if map_rows:
+        map_df = pd.DataFrame(map_rows)
+        fig_map = px.choropleth(
+            map_df,
+            locations="state",
+            locationmode="USA-states",
+            color="price",
+            color_continuous_scale="RdYlGn_r",
+            scope="usa",
+            labels={"price": "$/gallon", "state": "State", "region": "Region"},
+            hover_data={"region": True, "price": ":.3f", "state": True},
+        )
+        fig_map.update_layout(
+            height=500,
+            coloraxis_colorbar=dict(title="$/gal"),
+            geo=dict(bgcolor="rgba(0,0,0,0)"),
+            margin=dict(l=0, r=0, t=0, b=0),
+        )
+        st.plotly_chart(fig_map, use_container_width=True)
+
 # --- Regional Comparison Bar Chart ---
 st.subheader("Regional Diesel Prices")
 
