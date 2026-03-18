@@ -1,0 +1,12 @@
+period,duoarea,area_name,product,product_name,process,process-name,series,series-description,price,units,prev_price,change
+2026-03-16,R40,PADD 4,EPD2D,No 2 Diesel,PTE,Retail Sales,EMD_EPD2D_PTE_R40_DPG,Rocky Mountain No 2 Diesel Retail Prices (Dollars per Gallon),4.796,$/GAL,4.397,0.399
+2026-03-16,R50,PADD 5,EPD2D,No 2 Diesel,PTE,Retail Sales,EMD_EPD2D_PTE_R50_DPG,West Coast No 2 Diesel Retail Prices (Dollars per Gallon),5.856,$/GAL,5.556,0.2999999999999998
+2026-03-16,R5XCA,PADD 5 EXCEPT CALIFORNIA,EPD2D,No 2 Diesel,PTE,Retail Sales,EMD_EPD2D_PTE_R5XCA_DPG,West Coast (PADD 5) Except California No 2 Diesel Retail Prices (Dollars per Gallon),5.36,$/GAL,5.088,0.27200000000000024
+2026-03-16,SCA,CALIFORNIA,EPD2D,No 2 Diesel,PTE,Retail Sales,EMD_EPD2D_PTE_SCA_DPG,California No 2 Diesel Retail Prices (Dollars per Gallon),6.428,$/GAL,6.096,0.33199999999999985
+2026-03-16,NUS,U.S.,EPD2D,No 2 Diesel,PTE,Retail Sales,EMD_EPD2D_PTE_NUS_DPG,U.S. No 2 Diesel Retail Prices (Dollars per Gallon),5.071,$/GAL,4.859,0.21199999999999974
+2026-03-16,R10,PADD 1,EPD2D,No 2 Diesel,PTE,Retail Sales,EMD_EPD2D_PTE_R10_DPG,East Coast No 2 Diesel Retail Prices (Dollars per Gallon),5.105,$/GAL,4.901,0.20400000000000063
+2026-03-16,R20,PADD 2,EPD2D,No 2 Diesel,PTE,Retail Sales,EMD_EPD2D_PTE_R20_DPG,Midwest No 2 Diesel Retail Prices (Dollars per Gallon),4.97,$/GAL,4.801,0.1689999999999996
+2026-03-16,R1Z,PADD 1C,EPD2D,No 2 Diesel,PTE,Retail Sales,EMD_EPD2D_PTE_R1Z_DPG,Lower Atlantic (PADD 1C) No 2 Diesel Retail Prices (Dollars per Gallon),5.057,$/GAL,4.88,0.1770000000000005
+2026-03-16,R1Y,PADD 1B,EPD2D,No 2 Diesel,PTE,Retail Sales,EMD_EPD2D_PTE_R1Y_DPG,Central Atlantic (PADD 1B) No 2 Diesel Retail Prices (Dollars per Gallon),5.196,$/GAL,4.94,0.25599999999999934
+2026-03-16,R1X,PADD 1A,EPD2D,No 2 Diesel,PTE,Retail Sales,EMD_EPD2D_PTE_R1X_DPG,New England (PADD 1A) No 2 Diesel Retail Prices (Dollars per Gallon),5.236,$/GAL,4.97,0.266
+2026-03-16,R30,PADD 3,EPD2D,No 2 Diesel,PTE,Retail Sales,EMD_EPD2D_PTE_R30_DPG,Gulf Coast No 2 Diesel Retail Prices (Dollars per Gallon),4.835,$/GAL,4.627,0.20800000000000018

@@ -1,15 +1,37 @@
 """U.S. Diesel Price Comparison Dashboard."""
 
+import os
+
 import streamlit as st
 import pandas as pd
 import plotly.express as px
 
 import config
-from eia_client import (
-    fetch_current_prices,
-    fetch_multi_area_history,
-    get_regional_prices,
-)
+
+DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
+
+
+def _has_cached_data(product):
+    return (
+        os.path.isfile(os.path.join(DATA_DIR, f"current_{product}.csv"))
+        and os.path.isfile(os.path.join(DATA_DIR, f"history_{product}.csv"))
+    )
+
+
+def _load_cached_current(product):
+    df = pd.read_csv(os.path.join(DATA_DIR, f"current_{product}.csv"))
+    df["price"] = pd.to_numeric(df["price"], errors="coerce")
+    if "change" in df.columns:
+        df["change"] = pd.to_numeric(df["change"], errors="coerce")
+    return df
+
+
+def _load_cached_history(product):
+    df = pd.read_csv(os.path.join(DATA_DIR, f"history_{product}.csv"))
+    df["price"] = pd.to_numeric(df["price"], errors="coerce")
+    df["period"] = pd.to_datetime(df["period"])
+    return df
+
 
 st.set_page_config(
     page_title="U.S. Diesel Price Dashboard",
@@ -20,30 +42,9 @@ st.set_page_config(
 # --- Sidebar ---
 st.sidebar.title("Settings")
 
-# API key: prefer env var, allow override in sidebar
+# Determine data mode: cached files or live API
+use_cache = True
 api_key = config.EIA_API_KEY
-if not api_key:
-    api_key = st.sidebar.text_input(
-        "EIA API Key",
-        type="password",
-        help="Get a free key at https://www.eia.gov/opendata/register.php",
-    )
-    if api_key:
-        config.EIA_API_KEY = api_key
-
-if not config.EIA_API_KEY:
-    st.title("U.S. Diesel Price Dashboard")
-    st.warning("Please enter your EIA API key in the sidebar to get started.")
-    st.markdown(
-        """
-        ### Setup
-        1. Register for a free API key at [EIA Open Data](https://www.eia.gov/opendata/register.php)
-        2. Either:
-           - Enter the key in the sidebar, or
-           - Create a `.env` file with `EIA_API_KEY=your_key_here`
-        """
-    )
-    st.stop()
 
 # Product selector
 product_options = {v: k for k, v in config.PRODUCTS.items()}
@@ -54,24 +55,84 @@ product_label = st.sidebar.selectbox(
 )
 selected_product = product_options[product_label]
 
+if _has_cached_data(selected_product):
+    use_cache = True
+    st.sidebar.success("Using cached data")
+elif api_key:
+    use_cache = False
+else:
+    api_key = st.sidebar.text_input(
+        "EIA API Key",
+        type="password",
+        help="Get a free key at https://www.eia.gov/opendata/register.php",
+    )
+    if api_key:
+        config.EIA_API_KEY = api_key
+        use_cache = False
+    else:
+        st.title("U.S. Diesel Price Dashboard")
+        st.warning("No cached data found and no API key provided.")
+        st.markdown(
+            """
+            ### Setup
+            Either:
+            - Run `python scripts/refresh_data.py` locally to cache data, or
+            - Enter an EIA API key in the sidebar
+            """
+        )
+        st.stop()
+
 # History length
 history_weeks = st.sidebar.slider("History (weeks)", 12, 104, 52)
 
 
-# --- Cached data fetching ---
-@st.cache_data(ttl=3600, show_spinner=False)
-def _load_current_prices(product):
-    return fetch_current_prices(product)
+# --- Data loading ---
+if use_cache:
+    @st.cache_data(show_spinner=False)
+    def _load_current_prices(product):
+        return _load_cached_current(product)
 
+    @st.cache_data(show_spinner=False)
+    def _load_regional_prices(product):
+        from config import PADD_REGIONS, CALIFORNIA_AREA
+        df = _load_cached_current(product)
+        if df.empty:
+            return df
+        regions = df[df["duoarea"].isin(PADD_REGIONS.keys())].copy()
+        regions["region_name"] = regions["duoarea"].map(PADD_REGIONS)
+        ca = df[df["duoarea"] == CALIFORNIA_AREA].copy()
+        if not ca.empty:
+            ca["region_name"] = "California"
+            regions = pd.concat([regions, ca], ignore_index=True)
+        return regions.sort_values("price", ascending=True)
 
-@st.cache_data(ttl=3600, show_spinner=False)
-def _load_regional_prices(product):
-    return get_regional_prices(product)
+    @st.cache_data(show_spinner=False)
+    def _load_multi_history(area_codes, product, periods):
+        df = _load_cached_history(product)
+        if df.empty:
+            return df
+        df = df[df["duoarea"].isin(area_codes)]
+        # Trim to requested number of periods per area
+        cutoff = df["period"].max() - pd.Timedelta(weeks=periods)
+        return df[df["period"] >= cutoff]
+else:
+    from eia_client import (
+        fetch_current_prices,
+        fetch_multi_area_history,
+        get_regional_prices,
+    )
 
+    @st.cache_data(ttl=3600, show_spinner=False)
+    def _load_current_prices(product):
+        return fetch_current_prices(product)
 
-@st.cache_data(ttl=3600, show_spinner=False)
-def _load_multi_history(area_codes, product, periods):
-    return fetch_multi_area_history(area_codes, product, periods)
+    @st.cache_data(ttl=3600, show_spinner=False)
+    def _load_regional_prices(product):
+        return get_regional_prices(product)
+
+    @st.cache_data(ttl=3600, show_spinner=False)
+    def _load_multi_history(area_codes, product, periods):
+        return fetch_multi_area_history(area_codes, product, periods)
 
 
 # --- Main Dashboard ---
@@ -82,11 +143,11 @@ try:
         all_prices = _load_current_prices(selected_product)
         regional_prices = _load_regional_prices(selected_product)
 except Exception as e:
-    st.error(f"Failed to fetch data from EIA: {e}")
+    st.error(f"Failed to fetch data: {e}")
     st.stop()
 
 if all_prices.empty:
-    st.warning("No data returned from EIA. Check your API key and try again.")
+    st.warning("No data available. Try refreshing the cached data.")
     st.stop()
 
 # --- National Summary ---
