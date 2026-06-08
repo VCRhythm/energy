@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Networks &amp; Power Laws — Complexity.Lab</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="networks">
+  <main class="wrap page">
+    <div class="eyebrow">Networks &amp; Power Laws</div>
+    <h1 class="section-title">Why a few hubs rule the network</h1>
+    <p class="page-intro">
+      The web, social ties, protein interactions, airline routes — real networks look
+      nothing like random graphs. A handful of nodes hoard most of the connections, and
+      any two nodes are just a few hops apart. Two models explain why.
+    </p>
+
+    <!-- ===================== Barabasi–Albert ===================== -->
+    <section class="module">
+      <h2>Preferential Attachment (Barabási–Albert)</h2>
+      <p class="lead">
+        Grow a network one node at a time. Each newcomer links to existing nodes with
+        probability proportional to how many links they already have — the
+        <i>rich get richer</i>. The result is "scale-free": a few enormous hubs, a long
+        tail of small nodes, and a power-law degree distribution (a straight line on
+        log-log axes).
+      </p>
+      <div class="module-grid split">
+        <div>
+          <div class="canvas-wrap"><canvas id="net-canvas"></canvas></div>
+          <div class="controls">
+            <div class="btn-row">
+              <button class="btn primary" id="net-play">▶ Grow</button>
+              <button class="btn ghost" id="net-reset">Reset</button>
+            </div>
+            <div class="control"><label for="net-m">Links per new node <span class="val" data-val="net-m"></span></label>
+              <input type="range" id="net-m" min="1" max="5" step="1" value="2" /></div>
+          </div>
+          <div class="readout">
+            <span>Nodes: <b id="net-nodes">0</b></span>
+            <span>Edges: <b id="net-edges">0</b></span>
+            <span>Biggest hub: <b id="net-maxdeg">0</b> links</span>
+          </div>
+        </div>
+        <div>
+          <div class="chart-box tall" style="height:300px"><canvas id="net-chart"></canvas></div>
+          <div class="note try">
+            <b>Try this:</b> press <i>Grow</i> and let it run to ~200 nodes. Brighter,
+            bigger dots are hubs. On the chart, the points line up along a downward slope
+            — the power law <code>P(k) ∝ k⁻³</code> that random graphs never produce.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== Watts–Strogatz ===================== -->
+    <section class="module">
+      <h2>Small-World (Watts–Strogatz)</h2>
+      <p class="lead">
+        Start from an orderly ring where everyone knows their neighbors. Rewire just a
+        few edges into random long-range <span style="color:var(--accent-3)">shortcuts</span>
+        and something remarkable happens: the network stays highly clustered (your
+        friends know each other) yet the distance between any two nodes plummets —
+        "six degrees of separation".
+      </p>
+      <div class="module-grid split">
+        <div>
+          <div class="canvas-wrap"><canvas id="ws-canvas"></canvas></div>
+          <div class="controls">
+            <div class="control" style="min-width:260px">
+              <label for="ws-p">Rewiring probability p <span class="val" data-val="ws-p"></span></label>
+              <input type="range" id="ws-p" min="0" max="1" step="0.005" value="0.05" />
+            </div>
+            <button class="btn ghost" id="ws-reroll">Re-roll</button>
+          </div>
+          <div class="readout">
+            <span>Clustering C: <b id="ws-c">—</b></span>
+            <span>Avg path length L: <b id="ws-l">—</b></span>
+          </div>
+        </div>
+        <div>
+          <div class="chart-box tall" style="height:300px"><canvas id="ws-chart"></canvas></div>
+          <div class="note">
+            <b>Reading the chart:</b> as p increases, the pink path-length curve drops
+            far sooner than the teal clustering curve. The wide gap between them — at very
+            small p — is the small-world regime: short paths <i>and</i> tight clustering.
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/sims/network-ba.js"></script>
+  <script src="js/sims/watts-strogatz.js"></script>
+</body>
+</html>

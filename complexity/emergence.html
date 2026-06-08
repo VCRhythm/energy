@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Emergence &amp; Agents — Complexity.Lab</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="emergence">
+  <main class="wrap page">
+    <div class="eyebrow">Emergence &amp; Agents</div>
+    <h1 class="section-title">Order without a designer</h1>
+    <p class="page-intro">
+      In agent-based models, every individual follows its own small set of local rules.
+      Nobody is in charge — but global structure emerges anyway: flocks, segregated
+      neighborhoods, and avalanches poised at criticality.
+    </p>
+
+    <!-- ===================== Boids ===================== -->
+    <section class="module">
+      <h2>Boids — Flocking</h2>
+      <p class="lead">
+        Craig Reynolds showed in 1986 that lifelike flocking needs just three steering
+        rules: <b>cohesion</b> (move toward neighbors), <b>alignment</b> (match their
+        heading), and <b>separation</b> (don't crowd). Tune the balance and watch the
+        flock's character change.
+      </p>
+      <div class="canvas-wrap"><canvas id="boids-canvas"></canvas></div>
+      <div class="controls">
+        <button class="btn ghost" id="boids-reset">Respawn</button>
+        <div class="control"><label for="boids-cohesion">Cohesion <span class="val" data-val="boids-cohesion"></span></label>
+          <input type="range" id="boids-cohesion" min="0" max="2" step="0.01" value="0.6" /></div>
+        <div class="control"><label for="boids-alignment">Alignment <span class="val" data-val="boids-alignment"></span></label>
+          <input type="range" id="boids-alignment" min="0" max="2" step="0.01" value="0.7" /></div>
+        <div class="control"><label for="boids-separation">Separation <span class="val" data-val="boids-separation"></span></label>
+          <input type="range" id="boids-separation" min="0" max="3" step="0.01" value="1.2" /></div>
+        <div class="control"><label for="boids-radius">View radius <span class="val" data-val="boids-radius"></span></label>
+          <input type="range" id="boids-radius" min="20" max="120" step="1" value="60" /></div>
+      </div>
+      <div class="note try">
+        <b>Try this:</b> crank separation to 0 and the boids clump into a single dot;
+        zero out cohesion and alignment and they scatter like a gas. The flock lives in
+        the balance between.
+      </div>
+    </section>
+
+    <!-- ===================== Schelling ===================== -->
+    <section class="module">
+      <h2>Schelling's Segregation Model</h2>
+      <p class="lead">
+        Each agent is content as long as at least a fraction of its neighbors share its
+        color; unhappy agents relocate to a random empty cell. The shock: even a
+        <i>mild</i> preference (wanting just 30% similar neighbors) drives near-total
+        segregation. Individual tolerance ≠ collective outcome.
+      </p>
+      <div class="module-grid split">
+        <div>
+          <div class="canvas-wrap"><canvas id="schelling-canvas"></canvas></div>
+          <div class="controls">
+            <div class="btn-row">
+              <button class="btn primary" id="schelling-play">▶ Play</button>
+              <button class="btn" id="schelling-step">Step</button>
+              <button class="btn ghost" id="schelling-reset">Reset</button>
+            </div>
+            <div class="control"><label for="schelling-tol">Wants ≥ same neighbors <span class="val" data-val="schelling-tol"></span></label>
+              <input type="range" id="schelling-tol" min="0" max="0.85" step="0.01" value="0.30" /></div>
+            <div class="control"><label for="schelling-speed">Speed <span class="val" data-val="schelling-speed"></span></label>
+              <input type="range" id="schelling-speed" min="1" max="30" value="8" /></div>
+          </div>
+          <div class="readout">
+            <span>Round: <b id="schelling-round">0</b></span>
+            <span>Content: <b id="schelling-happy">—</b></span>
+            <span><b id="schelling-status" style="color:var(--good)"></b></span>
+          </div>
+        </div>
+        <div>
+          <div class="chart-box tall" style="height:300px"><canvas id="schelling-chart"></canvas></div>
+          <div class="note try">
+            <b>Try this:</b> set the preference to just <b>30%</b> and run to equilibrium —
+            the board still self-sorts into solid blocks. Then push it past ~70% and the
+            system can never satisfy everyone: it churns forever.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== Forest fire ===================== -->
+    <section class="module">
+      <h2>Forest Fire — Self-Organized Criticality</h2>
+      <p class="lead">
+        Trees grow at random; rare lightning ignites a tree and burns its whole connected
+        stand. The forest tunes <i>itself</i> to a critical density where fires of every
+        size occur — and their sizes follow a <b>power law</b>: countless tiny fires,
+        a few catastrophic ones. The same statistics describe earthquakes and avalanches.
+      </p>
+      <div class="module-grid split">
+        <div>
+          <div class="canvas-wrap"><canvas id="fire-canvas"></canvas></div>
+          <div class="controls">
+            <div class="btn-row">
+              <button class="btn primary" id="fire-play">▶ Play</button>
+              <button class="btn ghost" id="fire-reset">Reset</button>
+            </div>
+            <div class="control"><label for="fire-grow">Growth rate <span class="val" data-val="fire-grow"></span></label>
+              <input type="range" id="fire-grow" min="0.005" max="0.1" step="0.001" value="0.03" /></div>
+            <div class="control"><label for="fire-light">Lightning ×10⁻⁴ <span class="val" data-val="fire-light"></span></label>
+              <input type="range" id="fire-light" min="1" max="30" step="1" value="6" /></div>
+            <div class="control"><label for="fire-speed">Speed <span class="val" data-val="fire-speed"></span></label>
+              <input type="range" id="fire-speed" min="2" max="60" value="20" /></div>
+          </div>
+          <div class="readout"><span>Total fires: <b id="fire-count">0</b></span></div>
+        </div>
+        <div>
+          <div class="chart-box tall" style="height:300px"><canvas id="fire-chart"></canvas></div>
+          <div class="note">
+            <b>Reading the chart:</b> fire size vs frequency on log-log axes. Let it run a
+            while and the points fall along a descending straight line — the signature of
+            a power law and of a system sitting at its critical point.
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/sims/boids.js"></script>
+  <script src="js/sims/schelling.js"></script>
+  <script src="js/sims/forestfire.js"></script>
+</body>
+</html>

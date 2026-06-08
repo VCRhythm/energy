@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chaos &amp; Fractals — Complexity.Lab</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="chaos">
+  <main class="wrap page">
+    <div class="eyebrow">Chaos &amp; Fractals</div>
+    <h1 class="section-title">Deterministic, yet unpredictable</h1>
+    <p class="page-intro">
+      Chaotic systems follow exact rules but are so sensitive to their starting point
+      that long-term prediction becomes impossible — the "butterfly effect". Their
+      geometry is often fractal: detailed at every scale. Three icons of the field below.
+    </p>
+
+    <!-- ===================== Logistic Map ===================== -->
+    <section class="module">
+      <h2>The Logistic Map</h2>
+      <p class="lead">
+        A toy population model: <code>xₙ₊₁ = r · xₙ · (1 − xₙ)</code>. As you raise the
+        growth rate <b>r</b>, the system period-doubles — 1 value, then 2, 4, 8 … — and
+        tips into chaos. The cobweb plot shows the iteration; the bifurcation diagram
+        shows every long-term value for every r at once.
+      </p>
+
+      <div class="module-grid split">
+        <div>
+          <div class="canvas-wrap"><canvas id="logi-cobweb"></canvas></div>
+          <div class="controls">
+            <div class="control" style="min-width:280px">
+              <label for="logi-r">Growth rate r <span class="val" data-val="logi-r"></span></label>
+              <input type="range" id="logi-r" min="2.5" max="4.0" step="0.001" value="3.6" />
+            </div>
+          </div>
+          <div class="readout"><span>Regime: <b id="logi-regime"></b></span></div>
+        </div>
+        <div>
+          <div class="canvas-wrap"><canvas id="logi-bif"></canvas></div>
+          <div class="note try">
+            <b>Try this:</b> sweep r slowly from 2.9 to 4.0. Watch the cobweb settle to
+            one point, split to a 2-cycle near r≈3.0, cascade, then scatter. The pink
+            line marks your r on the bifurcation map — find the period-3 window near
+            r≈3.83.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== Lorenz ===================== -->
+    <section class="module">
+      <h2>The Lorenz Attractor</h2>
+      <p class="lead">
+        Edward Lorenz's simplified model of atmospheric convection. The trajectory never
+        repeats and never escapes — it loops forever around two wings, a
+        <i>strange attractor</i>. This is the system that gave us the butterfly effect.
+      </p>
+      <div class="canvas-wrap"><canvas id="lorenz-canvas"></canvas></div>
+      <div class="controls">
+        <div class="btn-row">
+          <button class="btn" id="lorenz-play">⏸ Pause</button>
+          <button class="btn ghost" id="lorenz-reset">Reset</button>
+        </div>
+        <div class="control"><label for="lorenz-sigma">σ (sigma) <span class="val" data-val="lorenz-sigma"></span></label>
+          <input type="range" id="lorenz-sigma" min="1" max="20" step="0.1" value="10" /></div>
+        <div class="control"><label for="lorenz-rho">ρ (rho) <span class="val" data-val="lorenz-rho"></span></label>
+          <input type="range" id="lorenz-rho" min="1" max="60" step="0.1" value="28" /></div>
+        <div class="control"><label for="lorenz-beta">β (beta) <span class="val" data-val="lorenz-beta"></span></label>
+          <input type="range" id="lorenz-beta" min="0.5" max="5" step="0.01" value="2.67" /></div>
+      </div>
+      <div class="note">
+        <b>Default ρ = 28 is the famous chaotic regime.</b> Drop ρ below ~24 and the
+        butterfly collapses to a stable point; push it higher for wilder orbits.
+      </div>
+    </section>
+
+    <!-- ===================== Mandelbrot ===================== -->
+    <section class="module">
+      <h2>The Mandelbrot Set</h2>
+      <p class="lead">
+        For each point <code>c</code> in the plane, iterate <code>z → z² + c</code> from
+        zero. Points that stay bounded are <i>in</i> the set (dark); the colors outside
+        count how fast they escape. The boundary is infinitely intricate — a true fractal.
+      </p>
+      <div class="canvas-wrap"><canvas id="mandel-canvas"></canvas></div>
+      <div class="controls">
+        <div class="btn-row">
+          <button class="btn ghost" id="mandel-reset">Reset view</button>
+          <button class="btn" data-mandel="-0.745,0.113,0.02">Seahorse Valley</button>
+          <button class="btn" data-mandel="-0.16,1.0405,0.05">Spiral</button>
+          <button class="btn" data-mandel="0.2815,0.5331,0.02">Mini-brot</button>
+        </div>
+        <div class="readout"><span>Zoom: <b id="mandel-zoom">1.0×</b></span></div>
+      </div>
+      <div class="note try">
+        <b>Try this:</b> <b>left-click</b> to zoom in, <b>right-click</b> to zoom out.
+        Dive into the boundary and you'll find smaller copies of the whole set — the
+        hallmark of self-similarity.
+      </div>
+    </section>
+  </main>
+
+  <script src="js/utils.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/sims/logistic.js"></script>
+  <script src="js/sims/lorenz.js"></script>
+  <script src="js/sims/mandelbrot.js"></script>
+</body>
+</html>
