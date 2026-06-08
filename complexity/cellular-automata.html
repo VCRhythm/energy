@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cellular Automata — Complexity.Lab</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="ca">
+  <main class="wrap page">
+    <div class="eyebrow">Cellular Automata</div>
+    <h1 class="section-title">Life &amp; computation from a grid</h1>
+    <p class="page-intro">
+      A cellular automaton is a grid of cells, each switching on or off based only on
+      its neighbors. There is no central controller — yet these rules produce gliders,
+      oscillators, self-replication, and even universal computation. Two classics below.
+    </p>
+
+    <!-- ===================== Game of Life ===================== -->
+    <section class="module">
+      <h2>Conway's Game of Life</h2>
+      <p class="lead">
+        Four rules decide each cell's fate: a live cell with 2–3 live neighbors
+        survives, a dead cell with exactly 3 neighbors is born, everything else dies.
+        Draw on the grid, drop in a pattern, and watch the population breathe.
+      </p>
+
+      <div class="module-grid split">
+        <div>
+          <div class="canvas-wrap">
+            <canvas id="gol-canvas"></canvas>
+          </div>
+          <div class="controls">
+            <div class="btn-row">
+              <button class="btn primary" id="gol-play">▶ Play</button>
+              <button class="btn" id="gol-step">Step</button>
+              <button class="btn ghost" id="gol-random">Randomize</button>
+              <button class="btn ghost" id="gol-clear">Clear</button>
+            </div>
+            <div class="control">
+              <label for="gol-speed">Speed <span class="val" data-val="gol-speed"></span></label>
+              <input type="range" id="gol-speed" min="2" max="60" value="14" />
+            </div>
+            <div class="control">
+              <label for="gol-pattern">Load pattern</label>
+              <select id="gol-pattern">
+                <option value="">— choose —</option>
+                <option value="glider">Gliders</option>
+                <option value="pulsar">Pulsar (oscillator)</option>
+                <option value="gun">Gosper glider gun</option>
+              </select>
+            </div>
+          </div>
+          <div class="readout">
+            <span>Generation: <b id="gol-gen">0</b></span>
+            <span>Living cells: <b id="gol-pop">0</b></span>
+          </div>
+        </div>
+
+        <div>
+          <div class="chart-box tall" style="height:300px"><canvas id="gol-chart"></canvas></div>
+          <div class="note try">
+            <b>Try this:</b> load the <i>Gosper glider gun</i> and press play — a fixed
+            structure manufactures an endless stream of gliders, and the population chart
+            climbs in a staircase. Click cells to draw your own ships.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== Elementary CA ===================== -->
+    <section class="module">
+      <h2>Elementary (Wolfram) Automata</h2>
+      <p class="lead">
+        One dimension, two states, and a rule that maps each cell's
+        <i>left–center–right</i> neighborhood to its next value. There are exactly 256
+        such rules. Each new generation is drawn as a row below the last, building a
+        space-time diagram.
+      </p>
+
+      <div class="canvas-wrap">
+        <canvas id="eca-canvas"></canvas>
+      </div>
+      <div class="controls">
+        <div class="control" style="min-width:240px">
+          <label for="eca-rule">Rule <span class="val" data-val="eca-rule"></span></label>
+          <input type="range" id="eca-rule" min="0" max="255" value="30" />
+        </div>
+        <div class="control">
+          <label for="eca-start">Initial row</label>
+          <select id="eca-start">
+            <option value="single">Single cell</option>
+            <option value="random">Random</option>
+          </select>
+        </div>
+        <div class="btn-row">
+          <button class="btn" data-rule="30">Rule 30</button>
+          <button class="btn" data-rule="90">Rule 90</button>
+          <button class="btn" data-rule="110">Rule 110</button>
+          <button class="btn" data-rule="184">Rule 184</button>
+        </div>
+      </div>
+      <div class="note">
+        <b>Currently showing Rule <span id="eca-rulenum">30</span>.</b>
+        Rule 30 is chaotic (used as a randomness source), Rule 90 draws the
+        Sierpiński triangle, and Rule 110 is proven <i>Turing-complete</i> — capable, in
+        principle, of any computation. All from a 1-D row of bits.
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/sims/gameoflife.js"></script>
+  <script src="js/sims/elementary-ca.js"></script>
+</body>
+</html>
